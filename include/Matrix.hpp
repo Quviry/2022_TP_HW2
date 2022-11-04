@@ -123,7 +123,7 @@ class Matrix {
     };
 
     void reshape(const unsigned int height, const unsigned int width);
-    ~Matrix() { delete this->body; }
+    ~Matrix() { delete[] this->body; }
 
    private:
     std::size_t col_num;
