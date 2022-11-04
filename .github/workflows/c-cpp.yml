@@ -12,8 +12,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: make
-      run: make
-    - name: make clean
-      run: make clean
+    - name: Checkout 
+      uses: actions/checkout@v3
+
+    - name: Install-require
+      run: apt-get install cmake clang-tidy clang-format valgrind
+    - name: Lint
+      run: make lint 
+    - name: Build
+      run: make build
+    - name: Test
+      run: make test
+    - name: Run
+      run: ./build/
+    - name: Memleaks
+      run: make memleak

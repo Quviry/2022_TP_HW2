@@ -8,9 +8,8 @@ include_directories(include)
 
 # Common sources
 add_library(${PROJECT_NAME}_objs OBJECT
-		include/Matrix.hpp
-		include/Column.hpp
-		include/Row.hpp
+		include/matrix.hpp
+		include/vector.hpp
 		include/RealContainer.hpp
 		include/tools.hpp
 )

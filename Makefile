@@ -15,3 +15,12 @@ test: build
 
 clean:
 	rm -rf build
+
+format:
+	clang-format -i  ./src/* ./include/*  --style=file
+
+lint:
+	clang-tidy  ./src/* ./include/*  --p=file -- -Iinclude/
+
+memleak:
+	valgrind --tool=memcheck --leak-check=yes ./build/MatrixCalculator
