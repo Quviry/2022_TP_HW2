@@ -19,32 +19,40 @@ jobs:
       run: sudo apt-get install cmake clang-tidy clang-format valgrind
 
     - name: Lint
+      working-directory: ${{github.workspace}}
       continue-on-error: true
       run: make lint 
 
     - name: Build
+      working-directory: ${{github.workspace}}
       run: make build
 
     - name: Test
+      working-directory: ${{github.workspace}}
       run: make test
 
     - name: Run
-      run: ./build/
+      working-directory: ${{github.workspace}}
+      run: ./build/MatrixCalculator
 
     - name: Memleaks
+      working-directory: ${{github.workspace}}
       run: make memleak
 
     - name: Run coverage analyse
+      working-directory: ${{github.workspace}}/build
       run: |
           lcov -t "MatrixCalculator" -o coverage.info -c -d ./CMakeFiles/MatrixCalculator.dir/src/
           lcov --remove coverage.info -o coverage.info '/usr/include/*' 
 
     - name: Get coverage page
+      working-directory: ${{github.workspace}}/build
       run: |
           cd build && genhtml -o report coverage.info
 
     - name: Load coverage result
+      working-directory: ${{github.workspace}}/build
       uses: actions/upload-artifact@v3
       with:
         name: Coverage
-        path: build/report/*
+        path: report/*
