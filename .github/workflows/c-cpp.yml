@@ -51,8 +51,7 @@ jobs:
           cd build && genhtml -o report coverage.info
 
     - name: Load coverage result
-      working-directory: ${{github.workspace}}/build
       uses: actions/upload-artifact@v3
       with:
         name: Coverage
-        path: report/*
+        path: build/report/*
