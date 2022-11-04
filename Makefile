@@ -7,7 +7,7 @@ all: clean build test
 
 
 build: 
-	cmake -S . -B build
+	cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 	cmake --build build
 
 test: build 
@@ -20,7 +20,7 @@ format:
 	clang-format -i  ./src/* ./include/*  --style=file
 
 lint:
-	clang-tidy  ./src/* ./include/*  --p=file -- -I./include/
+	clang-tidy  ./src/* ./include/*  --p=file -- -I./include/ -p build
 
 memleak:
 	valgrind --tool=memcheck --leak-check=yes ./build/MatrixCalculator
