@@ -70,14 +70,6 @@ class Vector {
         return result;
     }
 
-    Vector<T>& operator-(const Vector<T>& other) {
-        Vector<T> result(this);
-        for (unsigned long i = 0; i != result.get_size(); i++) {
-            result[i] -= other[i];
-        }
-        return result;
-    }
-
     
 
     std::string to_string() {
