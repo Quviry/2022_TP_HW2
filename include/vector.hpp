@@ -31,7 +31,7 @@ class Vector {
     }
 
     T operator[](int pos) { return this->body[pos]; }
-    ~Vector() { delete this->body; };
+    ~Vector() { delete[] this->body; };
     std::string to_string() {
         std::string result = "";
         for (std::size_t i = 0; i < size; ++i) {
