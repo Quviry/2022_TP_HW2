@@ -30,15 +30,19 @@ class Vector {
         }
     }
     ~Vector() { delete[] this->body; };
-    std::string to_string() {
-        std::string result = "";
-        for (std::size_t i = 0; i < size; ++i) {
-            result += std::to_string(body[i]) + " ";
-        }
-        return result;
-    }
-    T operator[](int pos) { return this->body[pos]; }
 
+    std::string result = "";
+    for (std::size_t i = 0; i < size; ++i) {
+        result += std::to_string(body[i]) + " ";
+    }
+    return result;
+}
+    
+    T operator[](int pos) {
+    return this->body[pos];
+}
+
+std::string to_string() {
     const std::size_t get_size() { return size; }
 
    private:

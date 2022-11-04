@@ -25,6 +25,10 @@ jobs:
 
     - name: Build
       working-directory: ${{github.workspace}}
+      run: make clean
+
+    - name: Build
+      working-directory: ${{github.workspace}}
       run: make build
 
     - name: Test
