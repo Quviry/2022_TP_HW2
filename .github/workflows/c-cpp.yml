@@ -23,9 +23,9 @@ jobs:
       continue-on-error: true
       run: make lint 
 
-    - name: Build
+    - name: Watchout
       working-directory: ${{github.workspace}}
-      run: make clean
+      run: pwd && ls 
 
     - name: Build
       working-directory: ${{github.workspace}}
