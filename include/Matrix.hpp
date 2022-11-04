@@ -4,7 +4,6 @@
 #include "tools.hpp"
 #include "vector.hpp"
 
-
 #pragma once
 
 namespace nvec {

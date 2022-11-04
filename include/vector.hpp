@@ -29,8 +29,6 @@ class Vector {
             this->body[i] = src[i];
         }
     }
-
-    T operator[](int pos) { return this->body[pos]; }
     ~Vector() { delete[] this->body; };
     std::string to_string() {
         std::string result = "";
@@ -39,6 +37,8 @@ class Vector {
         }
         return result;
     }
+    T operator[](int pos) { return this->body[pos]; }
+
     const std::size_t get_size() { return size; }
 
    private:

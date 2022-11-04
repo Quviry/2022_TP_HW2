@@ -20,7 +20,7 @@ format:
 	clang-format -i  ./src/* ./include/*  --style=file
 
 lint:
-	clang-tidy  ./src/* ./include/*  --p=file -- -I./include/ -p build
+	clang-tidy  ./src/* ./include/* -header-filter=-*  --p=file -- -I./include/ -p build
 
 memleak:
 	valgrind --tool=memcheck --leak-check=yes ./build/MatrixCalculator
