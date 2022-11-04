@@ -13,11 +13,11 @@ requires requires(T x) { x* x; }
 class Vector {
    public:
     Vector();
-    Vector(std::size_t size): size(size), body(new T[size]){}
-    Vector(const Vector<T>& src){
+    Vector(std::size_t size) : size(size), body(new T[size]) {}
+    Vector(const Vector<T>& src) {
         T* body = new T[src.get_size()];
         size = src.get_size();
-        for(unsigned long i = 0; i != size; i++){
+        for (unsigned long i = 0; i != size; i++) {
             body[i] = src[i];
         }
     }
@@ -69,8 +69,6 @@ class Vector {
         }
         return result;
     }
-
-    
 
     std::string to_string() {
         std::string result = "";
