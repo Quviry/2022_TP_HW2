@@ -18,6 +18,7 @@ jobs:
     - name: Install-require
       run: sudo apt-get install cmake clang-tidy clang-format valgrind
     - name: Lint
+      continue-on-error: true
       run: make lint 
     - name: Build
       run: make build
