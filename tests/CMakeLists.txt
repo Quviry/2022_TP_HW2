@@ -4,6 +4,8 @@ project(MatrixCalculator CXX)
 include(GNUInstallDirs)
 include_directories(../include)
 
+set(CMAKE_CXX_STANDARD 17)
+
 # Tests include sector
 include(FetchContent)
 FetchContent_Declare(
@@ -15,7 +17,6 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-# Unit Tests
 
 enable_testing()
 
@@ -25,6 +26,7 @@ add_executable(${PROJECT_NAME}_unittest
 
 target_link_libraries(${PROJECT_NAME}_unittest
   GTest::gtest_main
+  GTest::gmock_main
 )
 
 include(GoogleTest)
