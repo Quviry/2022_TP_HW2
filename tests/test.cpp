@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "gmock/gmock.h"
+#include <gmock/gmock.h>
 
 #include "matrix.hpp"
 
@@ -41,9 +41,9 @@ TEST(TestMatrix, Get_brackets_value_immutable){
     EXPECT_EQ(matrix[1][1], 4);
 }
 
-TEST(TestMatrix, Get_brackets_value_immutable){
+TEST(TestMatrix, Get_string_value){
     auto matrix = nvec::Matrix({{1, 2}, {3, 4}});
-    EXPECT_THAT(matrix.to_string(), ::testing::StartsWith("1 2 \n3 4\n"));
+    EXPECT_THAT(matrix.to_string(), ::testing::StartsWith("1 2 \n3 4"));
 }
 
 
