@@ -17,14 +17,34 @@ jobs:
 
     - name: Install-require
       run: sudo apt-get install cmake clang-tidy clang-format valgrind
+
     - name: Lint
       continue-on-error: true
       run: make lint 
+
     - name: Build
       run: make build
+
     - name: Test
       run: make test
+
     - name: Run
       run: ./build/
+
     - name: Memleaks
       run: make memleak
+
+    - name: Run coverage analyse
+      run: |
+          lcov -t "MatrixCalculator" -o coverage.info -c -d ./CMakeFiles/MatrixCalculator.dir/src/
+          lcov --remove coverage.info -o coverage.info '/usr/include/*' 
+
+    - name: Get coverage page
+      run: |
+          cd build && genhtml -o report coverage.info
+
+    - name: Load coverage result
+      uses: actions/upload-artifact@v3
+      with:
+        name: Coverage
+        path: build/report/*

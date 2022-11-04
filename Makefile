@@ -11,7 +11,7 @@ build:
 	cmake --build build
 
 test: build 
-	cd ./build && ctest 
+	cd ./build/tests && ctest 
 
 clean:
 	rm -rf build
