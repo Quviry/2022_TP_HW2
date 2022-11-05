@@ -10,10 +10,16 @@ TEST(TestMatrix, Creation_arrays) {
 }
 
 TEST(TestMatrix, Creation_from_vector) {
-    EXPECT_NO_THROW(nvec::Matrix<int>({nvec::Vector<int>({1, 2}), nvec::Vector<int>({3, 4})}));
-    std::cout << nvec::Matrix<int>({nvec::Vector<int>({1, 2}), nvec::Vector<int>({3, 4})}).to_string() << std::endl;
+    EXPECT_NO_THROW(nvec::Matrix<int>(
+        {nvec::Vector<int>({1, 2}), nvec::Vector<int>({3, 4})}));
+    std::cout << nvec::Matrix<int>(
+                     {nvec::Vector<int>({1, 2}), nvec::Vector<int>({3, 4})})
+                     .to_string()
+              << std::endl;
     std::cout << nvec::Matrix<int>({{1, 2}, {3, 4}}).to_string() << std::endl;
-    EXPECT_EQ(nvec::Matrix<int>({nvec::Vector<int>({1, 2}), nvec::Vector<int>({3, 4})}), nvec::Matrix<int>({{1, 2}, {3, 4}}));
+    EXPECT_EQ(nvec::Matrix<int>(
+                  {nvec::Vector<int>({1, 2}), nvec::Vector<int>({3, 4})}),
+              nvec::Matrix<int>({{1, 2}, {3, 4}}));
 }
 
 TEST(TestMatrix, Creation_void) {
@@ -56,12 +62,14 @@ TEST(TestMatrix, Get_diagonal) {
 }
 
 TEST(TestMatrix, Get_diagonal_big_hor) {
-    auto matrix = nvec::Matrix<int>({{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}});
+    auto matrix =
+        nvec::Matrix<int>({{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}});
     EXPECT_EQ(matrix.get_diagonal(), nvec::Vector<int>({1, 6, 11}));
 }
 
 TEST(TestMatrix, Get_diagonal_big_ver) {
-    auto matrix = nvec::Matrix<int>({{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}});
+    auto matrix =
+        nvec::Matrix<int>({{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}});
     EXPECT_EQ(matrix.get_diagonal(), nvec::Vector<int>({1, 5, 9}));
 }
 
@@ -104,10 +112,76 @@ TEST(TestMatrix, Get_column_immutable) {
     EXPECT_NE(column[0], matrix[0][0]);
 }
 
+TEST(TestMatrix, Matrix_addition) {
+    auto matrix1 = nvec::Matrix<int>({{1, 2}, {3, 4}});
+    auto matrix2 = nvec::Matrix<int>({{1, 2}, {3, 4}});
+    EXPECT_EQ(matrix1 + matrix2, nvec::Matrix<int>({{2, 4}, {6, 8}}));
+}
+
+TEST(TestMatrix, Matrix_subtraction) {
+    auto matrix1 = nvec::Matrix<int>({{1, 2}, {3, 4}});
+    auto matrix2 = nvec::Matrix<int>({{1, 2}, {3, 4}});
+    EXPECT_EQ(matrix1 - matrix2, nvec::Matrix<int>({{0, 0}, {0, 0}}));
+}
+
+TEST(TestMatrix, Matrix_multiplication) {
+    auto matrix1 = nvec::Matrix<int>({{1, 2}, {3, 4}});
+    auto matrix2 = nvec::Matrix<int>({{1, 2}, {3, 4}});
+    EXPECT_EQ(matrix1 * matrix2, nvec::Matrix<int>({{1, 4}, {9, 16}}));
+}
+
+TEST(TestMatrix, Number_multiplication) {
+    auto matrix = nvec::Matrix<int>({{1, 2}, {3, 4}});
+    EXPECT_EQ(matrix * 3, nvec::Matrix<int>({{3, 6}, {9, 12}}));
+}
+
+TEST(TestMatrix, Vector_multiplication) {
+    auto matrix = nvec::Matrix<int>({{1, 2}, {3, 4}});
+    auto vector = nvec::Vector<int>({1, 2});
+    EXPECT_EQ(matrix.matrix_multiply(vector), nvec::Vector<int>({5, 11}));
+}
+
+TEST(TestMatrix, Matrix_cross_multiplication) {
+    auto matrix1 = nvec::Matrix<int>({{1, 2}, {3, 4}});
+    auto matrix2 = nvec::Matrix<int>({{1, 2}, {3, 4}});
+    EXPECT_EQ(matrix1.matrix_multiply(matrix2),
+              nvec::Matrix<int>({{7, 10}, {15, 22}}));
+}
+
+TEST(TestMatrix, Matrix_cross_multiplication_nr) {
+    auto matrix1 = nvec::Matrix<int>({{0, 4, -2}, {-4, -3, 0}});
+    auto matrix2 = nvec::Matrix<int>({{0, 1}, {1, -1}, {2, 3}});
+    EXPECT_EQ(matrix1.matrix_multiply(matrix2),
+              nvec::Matrix<int>({{0, -10}, {-3, -1}}));
+}
 
 TEST(TestMatrix, Get_string_value) {
     auto matrix = nvec::Matrix<int>({{1, 2}, {3, 4}});
     EXPECT_THAT(matrix.to_string(), ::testing::StartsWith("1 2 \n3 4"));
+}
+
+TEST(TestVector, Vector_addition) {
+    auto vector1 = nvec::Vector<int>({1, 2, 3, 4});
+    auto vector2 = nvec::Vector<int>({1, 2, 3, 4});
+    EXPECT_EQ(vector1 + vector2, nvec::Vector<int>({2, 4, 6, 8}));
+}
+
+TEST(TestVector, Vector_subtraction) {
+    auto vector1 = nvec::Vector<int>({1, 2, 3, 4});
+    auto vector2 = nvec::Vector<int>({1, 2, 3, 4});
+    EXPECT_EQ(vector1 - vector2, nvec::Vector<int>({0, 0, 0, 0}));
+}
+
+TEST(TestVector, Vector_multiplication) {
+    auto vector1 = nvec::Vector<int>({1, 2, 3, 4});
+    auto vector2 = nvec::Vector<int>({1, 2, 3, 4});
+    EXPECT_EQ(vector1 * vector2, nvec::Vector<int>({1, 4, 9, 16}));
+}
+
+TEST(TestVector, Matrix_multiplication) {
+    auto matrix = nvec::Matrix<int>({{1, 2}, {3, 4}});
+    auto vector = nvec::Vector<int>({1, 2});
+    EXPECT_EQ(vector.matrix_multiply(matrix), nvec::Vector<int>({7, 10}));
 }
 
 int main(int argc, char** argv) {

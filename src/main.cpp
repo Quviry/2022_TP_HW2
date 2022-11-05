@@ -64,6 +64,9 @@ int main() {
     print("> first - second");
     print((first_ - second_).to_string());
 
+    print("> first * second");
+    print((first_ * second_).to_string());
+
     print("> Test #4");
     print("> Test #5");
     print("> Test #6");

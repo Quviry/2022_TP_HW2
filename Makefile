@@ -23,4 +23,4 @@ lint:
 	clang-tidy  ./src/* ./include/* ./tests/*.cpp -header-filter=-*  --p=file -- -Iinclude/ -p build
 
 memleak:
-	valgrind --tool=memcheck --leak-check=yes ./build/MatrixCalculator
+	valgrind --tool=memcheck --leak-check=yes ./build/tests/MatrixCalculator_unittest

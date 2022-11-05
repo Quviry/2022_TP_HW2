@@ -1,6 +1,13 @@
 #include <string>
 
+#include "tools.hpp"
+
 namespace nvec {
+
+/// @brief Watch matrix.hpp
+/// @tparam T
+template <typename T>
+class Matrix;
 
 template <typename T>
 #if __cplusplus >= 202002L
@@ -21,6 +28,13 @@ class Vector {
             body[i] = src[i];
         }
     }
+    Vector(const Vector<T>* src) {
+        this->body = new T[src->get_size()];
+        size = src->get_size();
+        for (unsigned long i = 0; i != size; i++) {
+            body[i] = (*src)[i];
+        }
+    }
     Vector(const T* src, std::size_t size) {
         this->size = size;
         this->body = new T[size];
@@ -38,7 +52,7 @@ class Vector {
     }
     ~Vector() { delete[] this->body; };
 
-    const T& operator[](int pos) const { return this->body[pos]; }
+    T& operator[](int pos) const { return this->body[pos]; }
     T& operator[](int pos) { return this->body[pos]; }
 
     bool operator==(const Vector<T>& other) const {
@@ -51,34 +65,57 @@ class Vector {
     }
 
     Vector<T>& operator+=(const Vector<T>& other) {
-        for (unsigned long i = 0; i != this->get_size(); i++) {
-            this[i] += other[i];
+        for (unsigned long i = 0; i < this->get_size(); ++i) {
+            this->body[i] += other[i];
         }
-        return this;
+        return *this;
     }
 
-    Vector<T>& operator+(const Vector<T>& other) const {
-        Vector<T> result(this);
-        for (unsigned long i = 0; i != result.get_size(); i++) {
-            result[i] += other[i];
-        }
+    Vector<T> operator+(const Vector<T>& other) const {
+        Vector result(this);
+        result += other;
         return result;
     }
 
     Vector<T>& operator-=(const Vector<T>& other) {
         for (unsigned long i = 0; i != this->get_size(); i++) {
-            this[i] -= other[i];
+            (*this)[i] -= other[i];
         }
-        return this;
+        return *this;
     }
 
-    Vector<T>& operator-(const Vector<T>& other) {
-        Vector<T> result(this);
-        for (unsigned long i = 0; i != result.get_size(); i++) {
-            result[i] -= other[i];
+    Vector<T>& operator*=(const Vector<T>& other) {
+        // assert(get_size() == other.get_size());
+        for (unsigned long i = 0; i != this->get_size(); i++) {
+            (*this)[i] *= other[i];
         }
+        return *this;
+    }
+
+    Vector<T> operator*(const Vector<T>& other) {
+        Vector<T> result(this);
+        result *= other;
         return result;
     }
+
+    Vector<T> operator-(const Vector<T>& other) {
+        Vector<T> result(this);
+        result -= other;
+        return result;
+    }
+
+    template <typename S>
+    Vector matrix_multiply(const Matrix<S>& other) {
+        assert(get_size() == other.get_height());
+        Vector<T> result(other.get_width());
+        for (std::size_t i = 0; i < other.get_width(); ++i) {
+            result[i] = body[0] * other(0, i);
+            for (std::size_t j = 1; j < get_size(); ++j) {
+                result[i] += body[j] * other(j, i);
+            }
+        }
+        return result;
+    };
 
     std::string to_string() {
         std::string result = "";
