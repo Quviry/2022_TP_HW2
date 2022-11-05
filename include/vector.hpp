@@ -38,7 +38,17 @@ class Vector {
     }
     ~Vector() { delete[] this->body; };
 
-    T& operator[](int pos) const { return this->body[pos]; }
+    const T& operator[](int pos) const { return this->body[pos]; }
+    T& operator[](int pos) { return this->body[pos]; }
+
+    bool operator==(const Vector<T>& other) const {
+        for (unsigned long i = 0; i != this->get_size(); i++) {
+            if ((*this)[i] != other[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     Vector<T>& operator+=(const Vector<T>& other) {
         for (unsigned long i = 0; i != this->get_size(); i++) {
@@ -47,7 +57,7 @@ class Vector {
         return this;
     }
 
-    Vector<T>& operator+(const Vector<T>& other) {
+    Vector<T>& operator+(const Vector<T>& other) const {
         Vector<T> result(this);
         for (unsigned long i = 0; i != result.get_size(); i++) {
             result[i] += other[i];

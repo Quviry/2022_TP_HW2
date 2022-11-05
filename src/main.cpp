@@ -41,7 +41,7 @@ int main() {
     print("Row n assess");
     print(a[1].to_string());
     print("Vector n assess");
-    print(a.get_Vector(1).to_string());
+    print(a.get_column(1).to_string());
 
     print("> Test #2");
     print("Type transformation");

@@ -17,10 +17,10 @@ clean:
 	rm -rf build
 
 format:
-	clang-format -i  ./src/* ./include/*  --style=file
+	clang-format -i  ./src/* ./include/* ./tests/*.cpp --style=file
 
 lint:
-	clang-tidy  ./src/* ./include/* -header-filter=-*  --p=file -- -Iinclude/ -p build
+	clang-tidy  ./src/* ./include/* ./tests/*.cpp -header-filter=-*  --p=file -- -Iinclude/ -p build
 
 memleak:
 	valgrind --tool=memcheck --leak-check=yes ./build/MatrixCalculator

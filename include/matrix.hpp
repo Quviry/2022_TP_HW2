@@ -17,7 +17,7 @@ requires requires(T x) { x* x; }
 #endif
 class Matrix {
    public:
-    template <std::size_t size_h = 0, std::size_t size_w = (0)>
+    template <std::size_t size_h = 0, std::size_t size_w = 0>
     Matrix() {
         this->body = new T[size_h * size_w];
         col_num = size_h;
@@ -42,10 +42,9 @@ class Matrix {
                 this->body[size_w * i + j] = src[i][j];
             }
         }
-        col_num = size_h;
-        row_num = size_w;
+        col_num = size_w;
+        row_num = size_h;
     }
-
     template <std::size_t size>
     Matrix(const T (&src)[size]) {
         col_num = size;
@@ -55,10 +54,35 @@ class Matrix {
             this->body[i] = src[i];
         }
     }
-    T& operator()(std::size_t row, std::size_t col) {
+    template <std::size_t size>
+    Matrix(const Vector<T> (&src)[size]) {
+        col_num = size;
+        row_num = src[0].get_size();
+        this->body = new T[col_num * row_num];
+        for (int i = 0; i < size; ++i) {
+            for(int j = 0; j < row_num; ++j){
+                this->body[i*col_num + j] = src[i][j];
+            }
+        }
+    }
+    ~Matrix() { delete[] this->body; }
+    T& operator()(std::size_t row, std::size_t col) const {
         return this->body[col_num * row + col];
     }
+    Vector<T> operator[](int row) const { return get_row(row); }
+    bool operator==(const Matrix& other) const {
+        assert(get_height() == other.get_height());
+        assert(get_width() == other.get_width());
 
+        for (std::size_t i = 0; i < row_num; ++i) {
+            for (std::size_t j = 0; j < col_num; ++j) {
+                if((*this)(i, j) != other(i, j)){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
     Matrix operator+(Matrix& a) {
         assert(get_height() == a.get_height());
         assert(get_width() == a.get_width());
@@ -85,11 +109,10 @@ class Matrix {
         return new_matrix;
     }
 
-    const std::size_t get_height() { return row_num; }
+    const std::size_t get_height() const { return row_num; }
 
-    const std::size_t get_width() { return col_num; }
+    const std::size_t get_width() const { return col_num; }
 
-    Vector<T> operator[](int row) { return get_Vector(row); }
     std::string to_string() {
         std::string result = "";
         for (std::size_t i = 0; i < col_num; ++i) {
@@ -110,8 +133,12 @@ class Matrix {
         delete[] Vector_body;
         return col;
     }
-    // Row<T> get_row(int row) { return Row(body + col_num * row, col_num); }
-    Vector<T> get_Vector(int col) {
+    Vector<T> get_row(int row) const {
+        return Vector<T>(subarray(body, col_num * row_num, col_num * row,
+                                  col_num * (row + 1)),
+                         col_num);
+    };
+    Vector<T> get_column(int col) {
         T* Vector_body = new T[row_num];
         for (std::size_t i = 0; i < row_num; ++i) {
             Vector_body[i] = body[i * col_num + col];
@@ -122,31 +149,10 @@ class Matrix {
     };
 
     void reshape(const unsigned int height, const unsigned int width);
-    ~Matrix() { delete[] this->body; }
 
    private:
     std::size_t col_num;
     std::size_t row_num;
     T* body = nullptr;
 };
-/*
-        template <typename T, std::size_t size>
-        Matrix::Matrix<T><Vector<T>>(const T (&src)[size]){
-                col_num = size;
-                row_num = 1;
-                this->body = new T[size];
-                for(int i = 0; i < size; ++i){
-                        this->body[i] = src[i];
-                }
-        }*/
-
-// template <std::size_t size>
-// Matrix::Matrix<Row<T>>(const T (&src)[size]){
-// 	col_num = size;
-// 	row_num = 1;
-// 	this->body = new T[size];
-// 	for(int i = 0; i < size; ++i){
-// 		this->body[i] = src[i];
-// 	}
-
 }  // namespace nvec
