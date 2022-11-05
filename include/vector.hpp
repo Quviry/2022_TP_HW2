@@ -52,8 +52,8 @@ class Vector {
     }
     ~Vector() { delete[] this->body; };
 
-    T& operator[](int pos) const { return this->body[pos]; }
-    T& operator[](int pos) { return this->body[pos]; }
+    T& operator[](int index) const { return (body[index]); }
+    T& operator[](int index) { return (body[index]); }
 
     bool operator==(const Vector<T>& other) const {
         for (unsigned long i = 0; i != this->get_size(); i++) {
@@ -71,15 +71,25 @@ class Vector {
         return *this;
     }
 
-    Vector<T> operator+(const Vector<T>& other) const {
-        Vector result(this);
-        result += other;
-        return result;
+    template <typename S>
+    Vector<T>& operator+=(const S& other) {
+        for (unsigned long i = 0; i < this->get_size(); ++i) {
+            this->body[i] += other;
+        }
+        return *this;
     }
 
     Vector<T>& operator-=(const Vector<T>& other) {
         for (unsigned long i = 0; i != this->get_size(); i++) {
             (*this)[i] -= other[i];
+        }
+        return *this;
+    }
+
+    template <typename S>
+    Vector<T>& operator-=(const S& other) {
+        for (unsigned long i = 0; i < this->get_size(); ++i) {
+            this->body[i] -= other;
         }
         return *this;
     }
@@ -98,9 +108,17 @@ class Vector {
         return result;
     }
 
-    Vector<T> operator-(const Vector<T>& other) {
+    template <typename S>
+    Vector<T> operator-(const S& decrement) const {
         Vector<T> result(this);
-        result -= other;
+        result -= decrement;
+        return result;
+    }
+
+    template <typename S>
+    Vector<T> operator+(const S& addition) const {
+        Vector result(this);
+        result += addition;
         return result;
     }
 

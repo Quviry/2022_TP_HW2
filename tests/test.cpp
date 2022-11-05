@@ -155,6 +155,69 @@ TEST(TestMatrix, Matrix_cross_multiplication_nr) {
               nvec::Matrix<int>({{0, -10}, {-3, -1}}));
 }
 
+TEST(TestMatrix, Matrix_sum_number) {
+    auto matrix1 = nvec::Matrix<int>({{1, 2}, {3, 4}});
+    auto matrix2 = nvec::Matrix<int>({{4, 5}, {6, 7}});
+    EXPECT_EQ(matrix1 + 3, matrix2);
+}
+
+TEST(TestMatrix, Matrix_dec_number) {
+    auto matrix1 = nvec::Matrix<int>({{1, 2}, {3, 4}});
+    auto matrix2 = nvec::Matrix<int>({{-2, -1}, {0, 1}});
+    EXPECT_EQ(matrix1 - 3, matrix2);
+}
+
+TEST(TestMatrix, Add_vector) {
+    auto matrix = nvec::Matrix<int>({{1, 2}, {3, 4}});
+    auto vector = nvec::Vector<int>({1, 2});
+    EXPECT_EQ(matrix.add_vector(vector), nvec::Matrix<int>({{2, 4}, {4, 6}}));
+}
+
+TEST(TestMatrix, Add_vector_vertical) {
+    auto matrix = nvec::Matrix<int>({{1, 2}, {3, 4}});
+    auto vector = nvec::Vector<int>({1, 2});
+    EXPECT_EQ(matrix.add_vector(vector, nvec::Position::Vertical),
+              nvec::Matrix<int>({{2, 3}, {5, 6}}));
+}
+
+TEST(TestMatrix, Dec_vector) {
+    auto matrix = nvec::Matrix<int>({{1, 2}, {3, 4}});
+    auto vector = nvec::Vector<int>({1, 2});
+    EXPECT_EQ(matrix.dec_vector(vector), nvec::Matrix<int>({{0, 0}, {2, 2}}));
+}
+
+TEST(TestMatrix, Dec_vector_vertical) {
+    auto matrix = nvec::Matrix<int>({{1, 2}, {3, 4}});
+    auto vector = nvec::Vector<int>({1, 2});
+    EXPECT_EQ(matrix.dec_vector(vector, nvec::Position::Vertical),
+              nvec::Matrix<int>({{0, 1}, {1, 2}}));
+}
+
+TEST(TestMatrix, Get_transposed) {
+    auto matrix1 = nvec::Matrix<int>({{1, 2}, {3, 4}});
+    auto matrix2 = nvec::Matrix<int>({{1, 3}, {2, 4}});
+    EXPECT_EQ(matrix1.get_transposed(), matrix2);
+}
+
+TEST(TestMatrix, Get_minor_matrix) {
+    auto matrix1 = nvec::Matrix<int>({{1, 4, 5}, {7, 8, 9}, {2, 7, 5}});
+    auto matrix2 = nvec::Matrix<int>({{8, 9}, {7, 5}});
+    std::cout << matrix1.get_minor_matrix(0, 0).to_string() << std::endl;
+    EXPECT_EQ(matrix1.get_minor_matrix(0, 0), matrix2);
+}
+
+TEST(TestMatrix, Get_reversed) {
+    auto matrix1 = nvec::Matrix<int>({{0, 1}, {1, 1}});
+    auto matrix2 = nvec::Matrix<int>({{-1, 1}, {1, 0}});
+    std::cout << matrix1.get_reversed().to_string() << std::endl;
+    EXPECT_EQ(matrix1.get_reversed(), matrix2);
+}
+
+TEST(TestMatrix, Get_determinant) {
+    auto matrix = nvec::Matrix<int>({{1, 4}, {7, 8}});
+    EXPECT_EQ(matrix.get_determinant(), -20);
+}
+
 TEST(TestMatrix, Get_string_value) {
     auto matrix = nvec::Matrix<int>({{1, 2}, {3, 4}});
     EXPECT_THAT(matrix.to_string(), ::testing::StartsWith("1 2 \n3 4"));
@@ -182,6 +245,18 @@ TEST(TestVector, Matrix_multiplication) {
     auto matrix = nvec::Matrix<int>({{1, 2}, {3, 4}});
     auto vector = nvec::Vector<int>({1, 2});
     EXPECT_EQ(vector.matrix_multiply(matrix), nvec::Vector<int>({7, 10}));
+}
+
+TEST(TestVector, Add_number) {
+    auto vector1 = nvec::Vector<int>({1, 2, 3, 4});
+    auto vector2 = nvec::Vector<int>({2, 3, 4, 5});
+    EXPECT_EQ(vector1 + 1, vector2);
+}
+
+TEST(TestVector, Dec_number) {
+    auto vector1 = nvec::Vector<int>({1, 2, 3, 4});
+    auto vector2 = nvec::Vector<int>({-9, -8, -7, -6});
+    EXPECT_EQ(vector1 - 10, vector2);
 }
 
 int main(int argc, char** argv) {

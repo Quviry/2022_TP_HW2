@@ -7,6 +7,9 @@
 #pragma once
 
 namespace nvec {
+
+enum class Position { Horisontal, Vertical };
+
 template <typename T>
 #if __cplusplus >= 202002L
 requires requires(T x) {
@@ -50,6 +53,7 @@ class Matrix {
         col_num = size_w;
         row_num = size_h;
     }
+
     template <std::size_t size>
     Matrix(const T (&src)[size]) {
         col_num = size;
@@ -59,6 +63,7 @@ class Matrix {
             this->body[i] = src[i];
         }
     }
+
     template <std::size_t size>
     Matrix(const Vector<T> (&src)[size]) {
         col_num = size;
@@ -70,6 +75,7 @@ class Matrix {
             }
         }
     }
+
     ~Matrix() { delete[] this->body; }
     T& operator()(std::size_t row, std::size_t col) const {
         return this->body[col_num * row + col];
@@ -172,6 +178,120 @@ class Matrix {
                 for (std::size_t k = 1; k < get_width(); ++k) {
                     result(i, j) += (*this)(i, k) * other(k, j);
                 }
+            }
+        }
+        return result;
+    }
+
+    template <typename S>
+    Matrix operator+(const S& addictor) {
+        Matrix new_matrix(*this);
+
+        for (std::size_t i = 0; i < row_num; ++i) {
+            for (std::size_t j = 0; j < col_num; ++j) {
+                new_matrix(i, j) += addictor;
+            }
+        }
+        return new_matrix;
+    }
+
+    template <typename S>
+    Matrix operator-(const S& decrement) {
+        Matrix new_matrix(*this);
+
+        for (std::size_t i = 0; i < row_num; ++i) {
+            for (std::size_t j = 0; j < col_num; ++j) {
+                new_matrix(i, j) -= decrement;
+            }
+        }
+
+        return new_matrix;
+    }
+
+    template <typename S>
+    Matrix add_vector(const Vector<S>& addition,
+                      const Position pos = Position::Horisontal) {
+        Matrix result(*this);
+        for (std::size_t i = 0; i < row_num; ++i) {
+            for (std::size_t j = 0; j < col_num; ++j) {
+                if (pos == Position::Horisontal) {
+                    result(i, j) += addition[j];
+                } else {
+                    result(i, j) += addition[i];
+                }
+            }
+        }
+        return result;
+    }
+
+    template <typename S>
+    Matrix dec_vector(const Vector<S>& decrement,
+                      const Position pos = Position::Horisontal) {
+        Matrix result(*this);
+        for (std::size_t i = 0; i < row_num; ++i) {
+            for (std::size_t j = 0; j < col_num; ++j) {
+                if (pos == Position::Horisontal) {
+                    result(i, j) -= decrement[j];
+                } else {
+                    result(i, j) -= decrement[i];
+                }
+            }
+        }
+        return result;
+    }
+
+    Matrix get_transposed() {
+        Matrix result(*this);
+        for (std::size_t i = 0; i < row_num; ++i) {
+            for (std::size_t j = 0; j < col_num; ++j) {
+                result(i, j) = (*this)(j, i);
+            }
+        }
+        return result;
+    }
+
+    Matrix get_minor_matrix(std::size_t row, std::size_t col) {
+        Matrix result(row_num - 1, col_num - 1);
+        for (std::size_t i = 0; i < col_num - 1; ++i) {
+            for (std::size_t j = 0; j < row_num - 1; ++j) {
+                result(j, i) =
+                    (*this)((j >= col ? j + 1 : j), (i >= row ? i + 1 : i));
+            }
+        }
+        return result;
+    }
+
+    Matrix get_reversed() {
+        T divisor = get_determinant();
+        Matrix result(row_num, col_num);
+        for (std::size_t i = 0; i < col_num; ++i) {
+            for (std::size_t j = 0; j < row_num; ++j) {
+                if ((i + j) % 2 == 0) {
+                    result(i, j) =
+                        get_minor_matrix(i, j).get_determinant() / divisor;
+                } else {
+                    result(i, j) =
+                        -get_minor_matrix(i, j).get_determinant() / divisor;
+                }
+            }
+        }
+        return result;
+    }
+
+    T get_determinant() {
+        assert(col_num == row_num);
+        if (col_num == 1) {
+            return (*this)(0, 0);
+        }
+        T result =
+            (*this)(0, 0) * this->get_minor_matrix(0, 0).get_determinant();
+        for (std::size_t i = 1; i < col_num; i++) {
+            if (i % 2 == 0) {
+                result += (*this)(i, 0) *
+                          this->get_minor_matrix(0, i).get_determinant();
+            } else {
+                result -= (*this)(i, 0) *
+                          this->get_minor_matrix(0, i).get_determinant();
             }
         }
         return result;
