@@ -4,9 +4,7 @@ project(MatrixCalculator CXX)
 include(GNUInstallDirs)
 include_directories(../include)
 
-set(GCC_COVERAGE_LINK_FLAGS " -coverage -lgcov")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_DEBUG} -fprofile-arcs -ftest-coverage -fPIC -O0")
-set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
+
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -21,6 +19,9 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
+set(GCC_COVERAGE_LINK_FLAGS " -coverage -lgcov")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_DEBUG} -fprofile-arcs -ftest-coverage -fPIC -O0")
+set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
 
 enable_testing()
 

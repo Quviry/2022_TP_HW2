@@ -42,7 +42,7 @@ jobs:
     - name: Run coverage analyse
       working-directory: ${{github.workspace}}/build/tests
       run: |
-          lcov -t "MatrixCalculator" -o coverage.info -c -d ./CMakeFiles/MatrixCalculator.dir/src/
+          lcov -t "MatrixCalculator" -o coverage.info -c -d ./CMakeFiles/MatrixCalculator_unittest.dir
           lcov --remove coverage.info -o coverage.info '/usr/include/*' 
 
     - name: Get coverage page
