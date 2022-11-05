@@ -20,7 +20,7 @@ format:
 	clang-format -i  ./src/* ./include/* ./tests/*.cpp --style=file
 
 lint:
-	clang-tidy  ./src/* ./include/* ./tests/*.cpp -header-filter=-*  --p=file -- -Iinclude/ -Ibuild/_deps/googletest-src/googlemock/include/ -p build
+	clang-tidy  ./src/* ./include/* ./tests/*.cpp  --p=file -- -Iinclude/ -p build
 
 memleak:
 	valgrind --tool=memcheck --leak-check=yes ./build/tests/MatrixCalculator_unittest
