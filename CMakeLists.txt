@@ -14,7 +14,7 @@ set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS
 add_library(${PROJECT_NAME}_objs OBJECT
 		include/matrix.hpp
 		include/vector.hpp
-		include/RealContainer.hpp
+		include/rationalcontainer.hpp
 		include/tools.hpp
 )
 

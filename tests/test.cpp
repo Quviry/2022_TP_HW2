@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "matrix.hpp"
+#include "rationalcontainer.hpp"
 
 TEST(TestMatrix, Creation_arrays) {
     EXPECT_NO_THROW(nvec::Matrix<int>({{1, 2}, {3, 4}}));
@@ -12,11 +13,6 @@ TEST(TestMatrix, Creation_arrays) {
 TEST(TestMatrix, Creation_from_vector) {
     EXPECT_NO_THROW(nvec::Matrix<int>(
         {nvec::Vector<int>({1, 2}), nvec::Vector<int>({3, 4})}));
-    std::cout << nvec::Matrix<int>(
-                     {nvec::Vector<int>({1, 2}), nvec::Vector<int>({3, 4})})
-                     .to_string()
-              << std::endl;
-    std::cout << nvec::Matrix<int>({{1, 2}, {3, 4}}).to_string() << std::endl;
     EXPECT_EQ(nvec::Matrix<int>(
                   {nvec::Vector<int>({1, 2}), nvec::Vector<int>({3, 4})}),
               nvec::Matrix<int>({{1, 2}, {3, 4}}));
@@ -202,14 +198,12 @@ TEST(TestMatrix, Get_transposed) {
 TEST(TestMatrix, Get_minor_matrix) {
     auto matrix1 = nvec::Matrix<int>({{1, 4, 5}, {7, 8, 9}, {2, 7, 5}});
     auto matrix2 = nvec::Matrix<int>({{8, 9}, {7, 5}});
-    std::cout << matrix1.get_minor_matrix(0, 0).to_string() << std::endl;
     EXPECT_EQ(matrix1.get_minor_matrix(0, 0), matrix2);
 }
 
 TEST(TestMatrix, Get_reversed) {
     auto matrix1 = nvec::Matrix<int>({{0, 1}, {1, 1}});
     auto matrix2 = nvec::Matrix<int>({{-1, 1}, {1, 0}});
-    std::cout << matrix1.get_reversed().to_string() << std::endl;
     EXPECT_EQ(matrix1.get_reversed(), matrix2);
 }
 
@@ -221,6 +215,13 @@ TEST(TestMatrix, Get_determinant) {
 TEST(TestMatrix, Get_string_value) {
     auto matrix = nvec::Matrix<int>({{1, 2}, {3, 4}});
     EXPECT_THAT(matrix.to_string(), ::testing::StartsWith("1 2 \n3 4"));
+}
+
+TEST(TestVector, Vector_reference_creation) {
+    EXPECT_NO_THROW({
+        auto vector1 = nvec::Vector<int>({1, 2, 3, 4});
+        auto vector2 = nvec::Vector<int>(vector1);
+    });
 }
 
 TEST(TestVector, Vector_addition) {
@@ -257,6 +258,47 @@ TEST(TestVector, Dec_number) {
     auto vector1 = nvec::Vector<int>({1, 2, 3, 4});
     auto vector2 = nvec::Vector<int>({-9, -8, -7, -6});
     EXPECT_EQ(vector1 - 10, vector2);
+}
+
+TEST(TestVector, Get_string_value) {
+    auto vector = nvec::Vector<int>({{1, 2, 3, 4}});
+    EXPECT_THAT(vector.to_string(), ::testing::StartsWith("1 2 3 4"));
+}
+
+TEST(TestRational, FullTest) {
+    using _ = nvec::RationalContainer;
+    auto matrix1 = nvec::Matrix<_>({{_(3), _(1)}, {_(1), _(1)}});
+    auto matrix2 = nvec::Matrix<_>({{_(0.5), _(-0.5)}, {_(-0.5), _(1.5)}});
+    EXPECT_EQ(matrix1.get_reversed(), matrix2);
+}
+
+TEST(TestRational, Creation) {
+    using _ = nvec::RationalContainer;
+    auto type1 = _(0);
+    auto type2 = _();
+    EXPECT_EQ(type1, type2);
+}
+
+TEST(TestRational, Getting) {
+    using _ = nvec::RationalContainer;
+    auto value = _(1);
+    EXPECT_EQ(value.get_value(), 1);
+}
+
+TEST(TestRational, Root) {
+    using _ = nvec::RationalContainer;
+    auto value = _(4);
+    EXPECT_EQ(value.get_root().get_value(), 1);
+}
+
+TEST(TestRational, Operators) {
+    using _ = nvec::RationalContainer;
+    auto value1 = _(4);
+    auto value1 = _(2);
+    EXPECT_EQ(value1 + value2, _(6));
+    EXPECT_EQ(value1 - value2, _(2));
+    EXPECT_EQ(value1 * value2, _(8));
+    EXPECT_EQ(value1 / value2, _(2));
 }
 
 int main(int argc, char** argv) {

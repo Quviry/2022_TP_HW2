@@ -20,13 +20,9 @@ requires requires(T x) { x* x; }
 #endif
 class Matrix {
    public:
-    template <std::size_t size_h = 1, std::size_t size_w = 1>
-    Matrix() {
-        this->body = new T[size_h * size_w];
-        col_num = size_h;
-        row_num = size_w;
-    };
     Matrix(std::size_t size_h = 1, std::size_t size_w = 1) {
+        assert(size_h > 0);
+        assert(size_w > 0);
         this->body = new T[size_h * size_w];
         col_num = size_h;
         row_num = size_w;
@@ -43,6 +39,8 @@ class Matrix {
     }
     template <std::size_t size_h, std::size_t size_w>
     Matrix(const T (&src)[size_h][size_w]) {
+        assert(size_h > 0);
+        assert(size_w > 0);
         std::size_t virtual_size = size_h * size_w;
         this->body = new T[virtual_size];
         for (std::size_t i = 0; i < size_h; ++i) {
@@ -56,6 +54,7 @@ class Matrix {
 
     template <std::size_t size>
     Matrix(const T (&src)[size]) {
+        assert(size > 0);
         col_num = size;
         row_num = 1;
         this->body = new T[size];
@@ -66,6 +65,7 @@ class Matrix {
 
     template <std::size_t size>
     Matrix(const Vector<T> (&src)[size]) {
+        assert(size > 0);
         col_num = size;
         row_num = src[0].get_size();
         this->body = new T[col_num * row_num];
@@ -78,9 +78,14 @@ class Matrix {
 
     ~Matrix() { delete[] this->body; }
     T& operator()(std::size_t row, std::size_t col) const {
+        assert(col < col_num);
+        assert(row < row_num);
         return this->body[col_num * row + col];
     }
-    Vector<T> operator[](int row) const { return get_row(row); }
+    Vector<T> operator[](int row) const {
+        assert(row < row_num);
+        return get_row(row);
+    }
     bool operator==(const Matrix& other) const {
         assert(get_height() == other.get_height());
         assert(get_width() == other.get_width());
@@ -198,7 +203,6 @@ class Matrix {
     template <typename S>
     Matrix operator-(const S& decrement) {
         Matrix new_matrix(*this);
-
         for (std::size_t i = 0; i < row_num; ++i) {
             for (std::size_t j = 0; j < col_num; ++j) {
                 new_matrix(i, j) -= decrement;
@@ -211,6 +215,11 @@ class Matrix {
     template <typename S>
     Matrix add_vector(const Vector<S>& addition,
                       const Position pos = Position::Horisontal) {
+        if (pos == Position::Horisontal) {
+            assert(addition.get_size() == col_num);
+        } else {
+            assert(addition.get_size() == row_num);
+        }
         Matrix result(*this);
         for (std::size_t i = 0; i < row_num; ++i) {
             for (std::size_t j = 0; j < col_num; ++j) {
@@ -227,6 +236,11 @@ class Matrix {
     template <typename S>
     Matrix dec_vector(const Vector<S>& decrement,
                       const Position pos = Position::Horisontal) {
+        if (pos == Position::Horisontal) {
+            assert(decrement.get_size() == col_num);
+        } else {
+            assert(decrement.get_size() == row_num);
+        }
         Matrix result(*this);
         for (std::size_t i = 0; i < row_num; ++i) {
             for (std::size_t j = 0; j < col_num; ++j) {
@@ -321,11 +335,14 @@ class Matrix {
         delete[] Vector_body;
         return col;
     }
+
     Vector<T> get_row(int row) const {
+        assert(row < row_num);
         return Vector<T>(body + col_num * row, col_num);
     };
 
     Vector<T> get_column(int col) {
+        assert(col < col_num);
         T* Vector_body = new T[row_num];
         for (std::size_t i = 0; i < row_num; ++i) {
             Vector_body[i] = body[i * col_num + col];

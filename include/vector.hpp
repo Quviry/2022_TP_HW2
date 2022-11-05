@@ -20,7 +20,9 @@ requires requires(T x) { x* x; }
 class Vector {
    public:
     Vector();
-    Vector(std::size_t size) : size(size), body(new T[size]) {}
+    Vector(std::size_t size) : size(size), body(new T[size]) {
+        assert(size > 0);
+    }
     Vector(const Vector<T>& src) {
         T* body = new T[src.get_size()];
         size = src.get_size();
@@ -36,6 +38,7 @@ class Vector {
         }
     }
     Vector(const T* src, std::size_t size) {
+        assert(size > 0);
         this->size = size;
         this->body = new T[size];
         for (int i = 0; i < size; ++i) {
@@ -44,6 +47,7 @@ class Vector {
     }
     template <std::size_t size>
     Vector(const T (&src)[size]) {
+        assert(size > 0);
         this->size = size;
         this->body = new T[size];
         for (int i = 0; i < size; ++i) {
@@ -56,6 +60,7 @@ class Vector {
     T& operator[](int index) { return (body[index]); }
 
     bool operator==(const Vector<T>& other) const {
+        assert(get_size() == other.get_size());
         for (unsigned long i = 0; i != this->get_size(); i++) {
             if ((*this)[i] != other[i]) {
                 return false;
@@ -65,6 +70,7 @@ class Vector {
     }
 
     Vector<T>& operator+=(const Vector<T>& other) {
+        assert(get_size() == other.get_size());
         for (unsigned long i = 0; i < this->get_size(); ++i) {
             this->body[i] += other[i];
         }
@@ -80,6 +86,7 @@ class Vector {
     }
 
     Vector<T>& operator-=(const Vector<T>& other) {
+        assert(get_size() == other.get_size());
         for (unsigned long i = 0; i != this->get_size(); i++) {
             (*this)[i] -= other[i];
         }
@@ -95,7 +102,7 @@ class Vector {
     }
 
     Vector<T>& operator*=(const Vector<T>& other) {
-        // assert(get_size() == other.get_size());
+        assert(get_size() == other.get_size());
         for (unsigned long i = 0; i != this->get_size(); i++) {
             (*this)[i] *= other[i];
         }
@@ -103,6 +110,7 @@ class Vector {
     }
 
     Vector<T> operator*(const Vector<T>& other) {
+        assert(get_size() == other.get_size());
         Vector<T> result(this);
         result *= other;
         return result;
