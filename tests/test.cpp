@@ -288,13 +288,13 @@ TEST(TestRational, Getting) {
 TEST(TestRational, Root) {
     using _ = nvec::RationalContainer;
     auto value = _(4);
-    EXPECT_EQ(value.get_root().get_value(), 1);
+    EXPECT_EQ(value.get_root().get_value(), 2);
 }
 
 TEST(TestRational, Operators) {
     using _ = nvec::RationalContainer;
     auto value1 = _(4);
-    auto value1 = _(2);
+    auto value2 = _(2);
     EXPECT_EQ(value1 + value2, _(6));
     EXPECT_EQ(value1 - value2, _(2));
     EXPECT_EQ(value1 * value2, _(8));
