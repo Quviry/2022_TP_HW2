@@ -18,17 +18,13 @@ jobs:
     - name: Install-require
       run: sudo apt-get install cmake clang-tidy clang-format valgrind lcov
 
-    - name: Lint
-      working-directory: ${{github.workspace}}
-      run: make lint 
-
-    - name: Watchout
-      working-directory: ${{github.workspace}}
-      run: pwd && ls 
-
     - name: Build
       working-directory: ${{github.workspace}}
       run: make build
+
+    - name: Lint
+      working-directory: ${{github.workspace}}
+      run: make lint 
 
     - name: Test
       working-directory: ${{github.workspace}}
