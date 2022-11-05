@@ -24,6 +24,7 @@ jobs:
 
     - name: Lint
       working-directory: ${{github.workspace}}
+      continue-on-error: true
       run: make lint 
 
     - name: Test
