@@ -17,6 +17,8 @@ requires requires(T x) {
 requires requires(T x) { x - x; }
 requires requires(T x) { x* x; }
 #endif
+/// @brief Represents array(vector), needs arithmetiacal and comparation
+/// operations in containing class to correct work
 class Vector {
    public:
     Vector();

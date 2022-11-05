@@ -18,6 +18,7 @@ requires requires(T x) {
 requires requires(T x) { x - x; }
 requires requires(T x) { x* x; }
 #endif
+/// @brief Represents 2D matrix, needs arithmetiacal and comparation operations in containing class to correct work
 class Matrix {
    public:
     Matrix(std::size_t size_h = 1, std::size_t size_w = 1) {
