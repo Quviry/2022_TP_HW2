@@ -40,13 +40,13 @@ jobs:
       run: make memleak
 
     - name: Run coverage analyse
-      working-directory: ${{github.workspace}}/build
+      working-directory: ${{github.workspace}}/build/tests
       run: |
           lcov -t "MatrixCalculator" -o coverage.info -c -d ./CMakeFiles/MatrixCalculator.dir/src/
           lcov --remove coverage.info -o coverage.info '/usr/include/*' 
 
     - name: Get coverage page
-      working-directory: ${{github.workspace}}/build
+      working-directory: ${{github.workspace}}/build/tests
       run: |
           genhtml -o report coverage.info
 
@@ -54,4 +54,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: Coverage
-        path: build/report/*
+        path: build/tests/report/*
